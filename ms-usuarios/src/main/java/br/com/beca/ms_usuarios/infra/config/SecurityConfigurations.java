@@ -22,10 +22,10 @@
 //        return http.csrf(csrf -> csrf.disable())
 //                .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 //                .authorizeHttpRequests(req -> {
-//                    // Libera o cadastro e o login para todo mundo (Public)
+//
 //                    req.requestMatchers(HttpMethod.POST, "/usuarios/cadastrar").permitAll();
 //                    req.requestMatchers(HttpMethod.POST, "/usuarios/login").permitAll();
-//                    // Qualquer outra rota exige estar logado
+//
 //                    req.anyRequest().authenticated();
 //                })
 //                .build();
@@ -36,7 +36,6 @@
 //        return configuration.getAuthenticationManager();
 //    }
 //
-//    // Bean que define o algoritmo de hash da senha
 //    @Bean
 //    public PasswordEncoder passwordEncoder() {
 //        return new BCryptPasswordEncoder();
