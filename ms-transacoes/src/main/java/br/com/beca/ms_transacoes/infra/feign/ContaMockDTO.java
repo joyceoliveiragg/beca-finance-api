@@ -1,5 +1,5 @@
-package br.com.beca.ms_transacoes.infra.feign;
+//package br.com.beca.ms_transacoes.infra.feign;
 
-import java.math.BigDecimal;
+//import java.math.BigDecimal;
 
-public record ContaMockDTO(String id, BigDecimal saldo, BigDecimal limite) {}
+//public record ContaMockDTO(String id, BigDecimal saldo, BigDecimal limite) {}

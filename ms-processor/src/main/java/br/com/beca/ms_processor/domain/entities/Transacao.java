@@ -1,4 +1,4 @@
-package br.com.beca.ms_transacoes.domain.entities;
+package br.com.beca.ms_processor.domain.entities;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -12,7 +12,10 @@ public class Transacao {
     private StatusTransacao status;
     private LocalDateTime dataCriacao;
 
-    // 1. Construtor para reconstruir o objeto vindo do Banco de Dados
+    // Construtor vazio (para uso interno ou frameworks de reflexão se necessário, mas mantendo puro)
+    public Transacao() {}
+
+    // Construtor completo para recuperar do banco
     public Transacao(Long id, Long usuarioId, BigDecimal valor, String moeda, StatusTransacao status, LocalDateTime dataCriacao) {
         this.id = id;
         this.usuarioId = usuarioId;
@@ -22,7 +25,7 @@ public class Transacao {
         this.dataCriacao = dataCriacao;
     }
 
-    // 2. Construtor para criar uma NOVA transação (Regra de Negócio: nasce PENDING e com data atual)
+    // Construtor de Negócio (para criar uma nova)
     public Transacao(Long usuarioId, BigDecimal valor, String moeda) {
         this.usuarioId = usuarioId;
         this.valor = valor;
@@ -31,12 +34,12 @@ public class Transacao {
         this.dataCriacao = LocalDateTime.now();
     }
 
-    // 3. Comportamento de Negócio
+    // Comportamento de Domínio
     public void atualizarStatus(StatusTransacao novoStatus) {
         this.status = novoStatus;
     }
 
-    // 4. Getters Manuais (Sem Lombok no Domínio)
+    // Getters manuais (Sem Lombok)
     public Long getId() { return id; }
     public Long getUsuarioId() { return usuarioId; }
     public BigDecimal getValor() { return valor; }
@@ -44,7 +47,6 @@ public class Transacao {
     public StatusTransacao getStatus() { return status; }
     public LocalDateTime getDataCriacao() { return dataCriacao; }
 
-    // Setters são evitados no domínio para favorecer imutabilidade,
-    // mas se precisar alterar o ID após salvar no banco, pode adicionar:
+    // Setters apenas se estritamente necessário, ou use o construtor para imutabilidade
     public void setId(Long id) { this.id = id; }
 }
