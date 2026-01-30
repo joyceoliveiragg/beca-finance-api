@@ -9,5 +9,7 @@ public record CambioDTO(
         LocalDateTime timestamp
 ) {
     public CambioDTO(double v) {
+        this("USD", "Dólar Americano", v, LocalDateTime.now());
     }
+
 }

@@ -12,10 +12,8 @@ public class Transacao {
     private StatusTransacao status;
     private LocalDateTime dataCriacao;
 
-    // Construtor vazio (para uso interno ou frameworks de reflexão se necessário, mas mantendo puro)
     public Transacao() {}
 
-    // Construtor completo para recuperar do banco
     public Transacao(Long id, Long usuarioId, BigDecimal valor, String moeda, StatusTransacao status, LocalDateTime dataCriacao) {
         this.id = id;
         this.usuarioId = usuarioId;
@@ -25,7 +23,6 @@ public class Transacao {
         this.dataCriacao = dataCriacao;
     }
 
-    // Construtor de Negócio (para criar uma nova)
     public Transacao(Long usuarioId, BigDecimal valor, String moeda) {
         this.usuarioId = usuarioId;
         this.valor = valor;
@@ -34,12 +31,10 @@ public class Transacao {
         this.dataCriacao = LocalDateTime.now();
     }
 
-    // Comportamento de Domínio
     public void atualizarStatus(StatusTransacao novoStatus) {
         this.status = novoStatus;
     }
 
-    // Getters manuais (Sem Lombok)
     public Long getId() { return id; }
     public Long getUsuarioId() { return usuarioId; }
     public BigDecimal getValor() { return valor; }
@@ -47,6 +42,5 @@ public class Transacao {
     public StatusTransacao getStatus() { return status; }
     public LocalDateTime getDataCriacao() { return dataCriacao; }
 
-    // Setters apenas se estritamente necessário, ou use o construtor para imutabilidade
     public void setId(Long id) { this.id = id; }
 }

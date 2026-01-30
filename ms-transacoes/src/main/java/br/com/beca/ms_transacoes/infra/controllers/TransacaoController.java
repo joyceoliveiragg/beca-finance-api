@@ -4,7 +4,7 @@ import br.com.beca.ms_transacoes.application.dto.CriarTransacaoRequest;
 import br.com.beca.ms_transacoes.application.dto.ResumoFinanceiroDTO;
 import br.com.beca.ms_transacoes.application.usecases.CriarTransacaoUseCase;
 import br.com.beca.ms_transacoes.infra.persistence.TransacaoRepository;
-import br.com.beca.ms_transacoes.infra.persistence.entities.TransacaoEntity; // Importe a Entidade
+import br.com.beca.ms_transacoes.infra.persistence.entities.TransacaoEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

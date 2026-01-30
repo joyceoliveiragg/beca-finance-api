@@ -9,7 +9,7 @@ public class Transacao {
     private Long usuarioId;
     private BigDecimal valor;
     private String moeda;
-    private String categoria;
+    private CategoriaTransacao categoria;
     private StatusTransacao status;
     private LocalDateTime dataCriacao;
 

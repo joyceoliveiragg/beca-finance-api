@@ -28,7 +28,7 @@ public class KafkaConsumerService {
     @Autowired
     private CambioClient cambioClient;
 
-    @KafkaListener(topics = "transaction.requested", groupId = "transaction-processor-group")
+    @KafkaListener(topics = "transacao-criada", groupId = "transaction-processor-group")
     @Transactional
     public void consumir(TransacaoEvento evento) {
         System.out.println("DEBUG: Processando transação ID: " + evento.id());

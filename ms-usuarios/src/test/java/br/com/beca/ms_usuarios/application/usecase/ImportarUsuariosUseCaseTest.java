@@ -71,7 +71,6 @@ class ImportarUsuariosUseCaseTest {
                 () -> useCase.executar(file));
     }
 
-    // -------- helpers --------
 
     private MultipartFile criarExcelValido() throws Exception {
         Workbook workbook = new XSSFWorkbook();
@@ -105,7 +104,7 @@ class ImportarUsuariosUseCaseTest {
         r1.createCell(3).setCellValue("123");
 
         Row r2 = sheet.createRow(2);
-        r2.createCell(0).setCellValue(""); // inválido
+        r2.createCell(0).setCellValue("");
 
         return toMultipart(workbook);
     }

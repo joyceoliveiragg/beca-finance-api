@@ -53,6 +53,7 @@ public class RelatorioService {
             header.createCell(1).setCellValue("Tipo");
             header.createCell(2).setCellValue("Valor");
             header.createCell(3).setCellValue("Categoria");
+            header.createCell(4).setCellValue("Status");
 
             BigDecimal totalPeriodo = BigDecimal.ZERO;
 
@@ -61,9 +62,10 @@ public class RelatorioService {
                 Row row = sheet.createRow(rowIdx++);
 
                 row.createCell(0).setCellValue(t.getDataCriacao().toLocalDate().toString());
-                row.createCell(1).setCellValue(t.getStatus().name());
+                row.createCell(1).setCellValue("SAIDA");
                 row.createCell(2).setCellValue(t.getValor().doubleValue());
-                row.createCell(3).setCellValue(t.getCategoria().name());
+                row.createCell(3).setCellValue(t.getCategoria() != null ? t.getCategoria().toString() : "OUTROS");
+                row.createCell(4).setCellValue(t.getStatus() != null ? t.getStatus().name() : "");
 
                 totalPeriodo = totalPeriodo.add(t.getValor());
             }
