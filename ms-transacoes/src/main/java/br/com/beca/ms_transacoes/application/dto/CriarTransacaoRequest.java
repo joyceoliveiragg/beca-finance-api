@@ -1,6 +1,8 @@
 package br.com.beca.ms_transacoes.application.dto;
 
 import java.math.BigDecimal;
+
+import br.com.beca.ms_transacoes.domain.entities.CategoriaTransacao;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
@@ -15,5 +17,6 @@ public record CriarTransacaoRequest(
         BigDecimal valor,
 
         @NotNull(message = "A moeda é obrigatória (ex: BRL, USD)")
-        String moeda
+        String moeda,
+        CategoriaTransacao categoria
 ) {}

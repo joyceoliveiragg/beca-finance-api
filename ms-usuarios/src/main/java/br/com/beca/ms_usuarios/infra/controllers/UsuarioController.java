@@ -46,11 +46,11 @@ public class UsuarioController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> uploadArquivo(@RequestParam("file") MultipartFile file) {
-
-        importarUsuariosUseCase.executar(file);
-
-        return ResponseEntity.ok("Arquivo processado com sucesso! Usuários criados.");
+    @PostMapping(value = "/import", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> importar(@RequestParam("file") MultipartFile file) {
+        var resultado = importarUsuariosUseCase.executar(file);
+        return ResponseEntity.ok(resultado);
     }
+
+
 }
