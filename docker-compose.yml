@@ -68,7 +68,10 @@ services:
 
 
   ms-transacoes:
-    build: ./ms-transacoes
+    build:
+      context: ./ms-transacoes
+      dockerfile: Dockerfile
+
     container_name: ms-transacoes
     ports:
       - "8080:8080"
@@ -86,7 +89,9 @@ services:
       - beca-net
 
   ms-processor:
-    build: ./ms-processor
+    build:
+      context: ./ms-processor
+      dockerfile: Dockerfile
     container_name: ms-processor
     ports:
       - "8082:8082"
