@@ -1,9 +1,11 @@
 package br.com.beca.ms_transacoes.application.usecases;
 
 import br.com.beca.ms_transacoes.application.dto.TransacaoEvento;
+import br.com.beca.ms_transacoes.domain.entities.CategoriaTransacao;
 import br.com.beca.ms_transacoes.domain.entities.Transacao;
 import br.com.beca.ms_transacoes.infra.kafka.KafkaProducerService;
 import br.com.beca.ms_transacoes.infra.persistence.TransacaoRepository;
+import br.com.beca.ms_transacoes.infra.persistence.entities.TransacaoEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,19 +20,23 @@ public class CriarTransacaoUseCase {
     @Autowired
     private KafkaProducerService kafkaService;
 
-
     @Transactional
-    public void executar(Long usuarioId, BigDecimal valor, String moeda) {
-        System.out.println("DEBUG: 1. Iniciando UseCase (Command API)...");
+    public void executar(Long usuarioId,
+                         BigDecimal valor,
+                         String moeda,
+                         CategoriaTransacao categoria) {
 
-        Transacao transacao = new Transacao(usuarioId, valor, moeda);
+        Transacao transacaoDomain =
+                new Transacao(usuarioId, valor, moeda, categoria);
 
-        repository.save(transacao);
-        System.out.println("DEBUG: 2. Transação salva ID: " + transacao.getId() + " - Status: PENDING");
+        TransacaoEntity entity = new TransacaoEntity(transacaoDomain);
 
-        TransacaoEvento evento = TransacaoEvento.fromEntity(transacao);
-        kafkaService.enviarEvento(evento);
+        entity = repository.save(entity);
 
-        System.out.println("DEBUG: 3. Evento enfileirado no Kafka com sucesso!");
+        transacaoDomain.setId(entity.getId());
+
+        kafkaService.enviarEvento(
+                TransacaoEvento.fromEntity(transacaoDomain)
+        );
     }
 }

@@ -3,9 +3,12 @@ package br.com.beca.ms_transacoes.infra.feign;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 
-@FeignClient(name = "cambio-client", url = "https://economia.awesomeapi.com.br")
+@FeignClient(
+        name = "brasilapi-cambio",
+        url = "https://brasilapi.com.br"
+)
 public interface CambioClient {
 
-    @GetMapping("/last/USD-BRL")
-    CambioDTO buscarCotacaoDolar();
+    @GetMapping("/api/exchangerate/v1/quotation/{moeda}")
+    CambioDTO buscarCotacao(@PathVariable String moeda);
 }

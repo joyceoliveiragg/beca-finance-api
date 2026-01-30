@@ -9,42 +9,48 @@ public class Transacao {
     private Long usuarioId;
     private BigDecimal valor;
     private String moeda;
+    private String categoria;
     private StatusTransacao status;
     private LocalDateTime dataCriacao;
 
-    // 1. Construtor para reconstruir o objeto vindo do Banco de Dados
-    public Transacao(Long id, Long usuarioId, BigDecimal valor, String moeda, StatusTransacao status, LocalDateTime dataCriacao) {
+    public Transacao(
+            Long id,
+            Long usuarioId,
+            BigDecimal valor,
+            String moeda,
+            CategoriaTransacao categoria,
+            StatusTransacao status,
+            LocalDateTime dataCriacao
+    ) {
         this.id = id;
         this.usuarioId = usuarioId;
         this.valor = valor;
         this.moeda = moeda;
+        this.categoria = categoria;
         this.status = status;
         this.dataCriacao = dataCriacao;
     }
 
-    // 2. Construtor para criar uma NOVA transação (Regra de Negócio: nasce PENDING e com data atual)
-    public Transacao(Long usuarioId, BigDecimal valor, String moeda) {
+    public Transacao(Long usuarioId, BigDecimal valor, String moeda, CategoriaTransacao categoria) {
         this.usuarioId = usuarioId;
         this.valor = valor;
         this.moeda = moeda;
+        this.categoria = categoria;
         this.status = StatusTransacao.PENDING;
         this.dataCriacao = LocalDateTime.now();
     }
 
-    // 3. Comportamento de Negócio
     public void atualizarStatus(StatusTransacao novoStatus) {
         this.status = novoStatus;
     }
 
-    // 4. Getters Manuais (Sem Lombok no Domínio)
     public Long getId() { return id; }
     public Long getUsuarioId() { return usuarioId; }
     public BigDecimal getValor() { return valor; }
     public String getMoeda() { return moeda; }
+    public CategoriaTransacao getCategoria() {return categoria;}
     public StatusTransacao getStatus() { return status; }
     public LocalDateTime getDataCriacao() { return dataCriacao; }
 
-    // Setters são evitados no domínio para favorecer imutabilidade,
-    // mas se precisar alterar o ID após salvar no banco, pode adicionar:
     public void setId(Long id) { this.id = id; }
 }

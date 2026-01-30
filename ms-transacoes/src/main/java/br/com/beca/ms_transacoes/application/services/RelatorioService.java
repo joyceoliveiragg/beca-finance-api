@@ -1,16 +1,20 @@
 package br.com.beca.ms_transacoes.application.services;
 
-import br.com.beca.ms_transacoes.domain.entities.Transacao;
 import br.com.beca.ms_transacoes.infra.persistence.TransacaoRepository;
-import com.lowagie.text.*;
-import com.lowagie.text.pdf.PdfPCell;
-import com.lowagie.text.pdf.PdfPTable;
-import com.lowagie.text.pdf.PdfWriter;
+import br.com.beca.ms_transacoes.infra.persistence.entities.TransacaoEntity;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+
 
 @Service
 public class RelatorioService {
@@ -18,47 +22,62 @@ public class RelatorioService {
     @Autowired
     private TransacaoRepository repository;
 
-    public byte[] gerarExtratoPdf(Long usuarioId) {
-        List<Transacao> transacoes = repository.findByUsuarioId(usuarioId);
+    public byte[] gerarRelatorioExcel(Long usuarioId, String periodo) {
 
-        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-            Document document = new Document();
-            PdfWriter.getInstance(document, out);
-            document.open();
+        LocalDate hoje = LocalDate.now();
+        LocalDateTime inicio;
+        LocalDateTime fim;
 
-            Font fontTitulo = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18);
-            Paragraph titulo = new Paragraph("Extrato de Transações", fontTitulo);
-            titulo.setAlignment(Element.ALIGN_CENTER);
-            document.add(titulo);
-            document.add(new Paragraph(" "));
+        if ("diario".equalsIgnoreCase(periodo)) {
+            inicio = hoje.atStartOfDay();
+            fim = hoje.atTime(23, 59, 59);
+        } else if ("mensal".equalsIgnoreCase(periodo)) {
+            inicio = hoje.withDayOfMonth(1).atStartOfDay();
+            fim = hoje.withDayOfMonth(hoje.lengthOfMonth()).atTime(23, 59, 59);
+        } else {
+            throw new IllegalArgumentException("Período inválido. Use diario ou mensal.");
+        }
 
-            PdfPTable table = new PdfPTable(3);
-            table.setWidthPercentage(100);
+        List<TransacaoEntity> transacoes =
+                repository.buscarPorPeriodo(usuarioId, inicio, fim);
 
-            adicionarCabecalho(table, "Data");
-            adicionarCabecalho(table, "Valor");
-            adicionarCabecalho(table, "Moeda");
+        try (Workbook workbook = new XSSFWorkbook();
+             ByteArrayOutputStream out = new ByteArrayOutputStream()) {
 
-            for (Transacao t : transacoes) {
-                table.addCell(t.getDataCriacao().toString());
-                table.addCell("R$ " + t.getValor().toString());
-                table.addCell(t.getMoeda());
+            Sheet sheet = workbook.createSheet("Relatório");
+
+            int rowIdx = 0;
+
+            Row header = sheet.createRow(rowIdx++);
+            header.createCell(0).setCellValue("Data");
+            header.createCell(1).setCellValue("Tipo");
+            header.createCell(2).setCellValue("Valor");
+            header.createCell(3).setCellValue("Categoria");
+
+            BigDecimal totalPeriodo = BigDecimal.ZERO;
+
+            for (TransacaoEntity t : transacoes) {
+
+                Row row = sheet.createRow(rowIdx++);
+
+                row.createCell(0).setCellValue(t.getDataCriacao().toLocalDate().toString());
+                row.createCell(1).setCellValue(t.getStatus().name());
+                row.createCell(2).setCellValue(t.getValor().doubleValue());
+                row.createCell(3).setCellValue(t.getCategoria().name());
+
+                totalPeriodo = totalPeriodo.add(t.getValor());
             }
 
-            document.add(table);
-            document.close();
+            Row totalRow = sheet.createRow(rowIdx);
+            totalRow.createCell(1).setCellValue("TOTAL DO PERÍODO");
+            totalRow.createCell(2).setCellValue(totalPeriodo.doubleValue());
 
+            workbook.write(out);
             return out.toByteArray();
-        } catch (Exception e) {
-            throw new RuntimeException("Erro ao gerar PDF", e);
-        }
-    }
 
-    private void adicionarCabecalho(PdfPTable table, String texto) {
-        PdfPCell cell = new PdfPCell();
-        cell.setPhrase(new Phrase(texto, FontFactory.getFont(FontFactory.HELVETICA_BOLD)));
-        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-        cell.setBackgroundColor(java.awt.Color.LIGHT_GRAY);
-        table.addCell(cell);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao gerar relatório Excel", e);
+        }
+
     }
 }

@@ -1,11 +1,13 @@
 package br.com.beca.ms_processor.infra.feign;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
+import java.time.LocalDateTime;
 
 public record CambioDTO(
-        @JsonAlias("USDBRL") Moeda moeda
+        String currency,
+        String name,
+        Double bid,
+        LocalDateTime timestamp
 ) {
-    public record Moeda(
-            @JsonAlias("bid") String cotacao
-    ) {}
+    public CambioDTO(double v) {
+    }
 }
