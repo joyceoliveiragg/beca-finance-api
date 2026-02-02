@@ -4,6 +4,7 @@ import br.com.beca.ms_usuarios.application.dto.CadastroUsuarioRequest;
 import br.com.beca.ms_usuarios.application.dto.UsuarioResponse;
 import br.com.beca.ms_usuarios.application.usecases.CadastrarUsuarioUseCase;
 import br.com.beca.ms_usuarios.infra.persistence.UsuarioRepository;
+import br.com.beca.ms_usuarios.infra.persistence.entities.UsuarioEntity;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import br.com.beca.ms_usuarios.application.usecases.ImportarUsuariosUseCase;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/usuarios")
@@ -37,7 +39,7 @@ public class UsuarioController {
 
     @GetMapping("/{id}")
     public ResponseEntity<UsuarioResponse> buscarPorId(@PathVariable Long id) {
-        return repository.findById(id)
+        return repository.findByIdAndAtivoTrue(id)
                 .map(usuarioEntity -> ResponseEntity.ok(new UsuarioResponse(
                         usuarioEntity.getId(),
                         usuarioEntity.getNome(),
@@ -52,5 +54,22 @@ public class UsuarioController {
         return ResponseEntity.ok(resultado);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> inativar(@PathVariable Long id) {
+        var usuarioOpt = repository.findByIdAndAtivoTrue(id);
+        if (usuarioOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
 
+        var usuario = usuarioOpt.get();
+        usuario.setAtivo(false);
+        repository.save(usuario);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<UsuarioEntity>> listar() {
+        return ResponseEntity.ok(repository.findAllByAtivoTrue());
+    }
 }
