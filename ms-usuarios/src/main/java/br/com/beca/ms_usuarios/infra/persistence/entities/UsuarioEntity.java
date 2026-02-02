@@ -24,12 +24,18 @@ public class UsuarioEntity implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String nome;
 
     @Column(unique = true)
     private String email;
+
     private String senha;
+
     private String cpf;
+
+    @Column(nullable = false)
+    private Boolean ativo = true;
 
     public UsuarioEntity(Usuario usuario) {
         this.id = usuario.getId();
@@ -37,6 +43,7 @@ public class UsuarioEntity implements UserDetails {
         this.email = usuario.getEmail();
         this.senha = usuario.getSenha();
         this.cpf = usuario.getCpf();
+        this.ativo = true;
     }
 
     public Usuario toDomain() {
@@ -59,14 +66,22 @@ public class UsuarioEntity implements UserDetails {
     }
 
     @Override
-    public boolean isAccountNonExpired() { return true; }
+    public boolean isAccountNonExpired() {
+        return true;
+    }
 
     @Override
-    public boolean isAccountNonLocked() { return true; }
+    public boolean isAccountNonLocked() {
+        return true;
+    }
 
     @Override
-    public boolean isCredentialsNonExpired() { return true; }
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
 
     @Override
-    public boolean isEnabled() { return true; }
+    public boolean isEnabled() {
+        return Boolean.TRUE.equals(this.ativo);
+    }
 }

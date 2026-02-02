@@ -1,0 +1,177 @@
+{
+  "info": {
+    "name": "Beca Finance API",
+    "_postman_id": "c1bd0b6d-da22-4d98-8bed-18c9c356c8c7",
+    "description": "Coleção para demonstração da Beca Finance API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Usuários",
+      "item": [
+        {
+          "name": "Criar Usuário",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8081/usuarios",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8081",
+              "path": [
+                "usuarios"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Ana Silva\",\n  \"email\": \"ana.silva@example.com\",\n  \"cpf\": \"12345678901\",\n  \"senha\": \"Senha@123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8081/auth/login",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8081",
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"login\": \"ana.silva@example.com\",\n  \"senha\": \"Senha@123\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Transações",
+      "item": [
+        {
+          "name": "Criar Transação BRL",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/transacoes",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "transacoes"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usuarioId\": 1,\n  \"valor\": 10.0,\n  \"moeda\": \"BRL\",\n  \"categoria\": \"ALIMENTACAO\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Criar Transação USD",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/transacoes",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "transacoes"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usuarioId\": 1,\n  \"valor\": 5.0,\n  \"moeda\": \"USD\",\n  \"categoria\": \"COMPRAS\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Resumo de Transações",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:8080/transacoes/resumo/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "transacoes",
+                "resumo",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Download Relatório Mensal",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:8080/transacoes/relatorio/download?usuarioId=1&periodo=mensal",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "transacoes",
+                "relatorio",
+                "download"
+              ],
+              "query": [
+                {
+                  "key": "usuarioId",
+                  "value": "1"
+                },
+                {
+                  "key": "periodo",
+                  "value": "mensal"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
